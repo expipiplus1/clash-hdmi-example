@@ -12,29 +12,34 @@ let
   else
     pkgs.haskell.packages.${compiler};
   haskellPackages = baseHaskellPackages.extend (self: _super:
-    lib.mapAttrs (_: haskell.lib.disableLibraryProfiling) {
-      clash-shake = self.callCabal2nix "" (/home/j/src/clash-shake) { };
-      # pkgs.fetchFromGitHub {
-      # owner = "gergoerdi";
-      # repo = "clash-shake";
-      # rev = "ed20d982c034a285f18403b76eb9d511524649fb"; # master
-      # sha256 = "1n0cdfmblasl4bnsa3sv7x7h790r41pf1dhkgi2p31mkn9mzc5rp";
-      # }
+    lib.mapAttrs
+    (_: p: with haskell.lib; dontCheck (disableLibraryProfiling p)) {
+      clash-shake = self.callCabal2nix "" clashShakeSrc { };
       clash-ghc = self.callCabal2nix "" (clashSrc + "/clash-ghc") { };
       clash-lib = self.callCabal2nix "" (clashSrc + "/clash-lib") { };
       clash-prelude = self.callCabal2nix "" (clashSrc + "/clash-prelude") { };
     });
 
+  # clashSrc = /home/j/src/clash-compiler;
   clashSrc = pkgs.fetchFromGitHub {
     owner = "expipiplus1";
     repo = "clash-compiler";
-    rev = "8fcb2c2e857d1fc8ca92a33113b38b9d1d1572ac"; # joe-check
-    sha256 = "07pbccvv0vf4nzk2hv7vx0za5mh72fxfj13a0b8zj9s13k08bh51";
+    rev = "a41d61c9109357e034691896798ebfc1b83b24af"; # joe-yosys-sva
+    sha256 = "0c5f201h5cfr8zibrjki9v791fipqd2b9rs6n5ck003wv50nsvsr";
+  };
+
+  # clashShakeSrc = /home/j/src/clash-shake;
+  clashShakeSrc = pkgs.fetchFromGitHub {
+    owner = "expipiplus1";
+    repo = "clash-shake";
+    rev = "c12baa61050a44152d6e8aaa5b27f30d4753e5d2"; # sf-ecp5
+    sha256 = "14mp4qg2k8z1bqhhzggjww2fw72vzdkrgglqba90897mvssw43zh";
   };
 
   hask = haskellPackages.ghcWithHoogle
     (p: with p; [ clash-shake clash-ghc clash-prelude ]);
 in mkShell {
-  nativeBuildInputs = [ yosys symbiyosys nextpnr trellis openocd ecpdap hask ];
+  nativeBuildInputs =
+    [ ghdl yosys yosys-ghdl z3 symbiyosys nextpnr trellis openocd ecpdap hask ];
 }
 

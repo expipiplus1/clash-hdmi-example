@@ -28,12 +28,13 @@ main = shakeArgs shakeOptions { shakeFiles = outDir } $ do
     putNormal $ "Cleaning files in " <> outDir
     removeFilesAfter outDir ["//*"]
 
-  kit@ClashKit {..} <- clashRules (outDir </> "clash")
-                                  SystemVerilog
-                                  ["src"]
-                                  "Blink"
-                                  ["-Wno-partial-type-signatures"]
-                                  (pure ())
+  kit@ClashKit {..} <- clashRules
+    (outDir </> "clash")
+    SystemVerilog
+    ["src"]
+    "Blink"
+    ["-Wno-partial-type-signatures", "-fclash-clear"]
+    (pure ())
 
   forM_ targets $ \(name, synth) -> do
     SynthKit {..} <- synth kit
