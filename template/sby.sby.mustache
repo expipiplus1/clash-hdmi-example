@@ -1,0 +1,12 @@
+[options]
+mode prove
+
+[engines]
+smtbmc z3
+
+[script]
+read -formal -sv {{sources}}
+prep -top {{top}}
+
+[files]
+{{files}}
