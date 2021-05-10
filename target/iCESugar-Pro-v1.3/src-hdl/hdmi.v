@@ -21,9 +21,12 @@ module hdmi (
   assign grn= pixel[15:8];
   assign blu= pixel[7:0];
 
-  wire o_red;
-  wire o_grn;
-  wire o_blu;
+  wire [1:0] o_red;
+  wire [1:0] o_grn;
+  wire [1:0] o_blu;
+  wire [1:0] o_clk;
+  assign o_clk[0]= clk_px;
+  assign o_clk[1]= clk_px;
   wire o_rd, o_newline, o_newframe;
 
   // A reset line that goes low after 16 ticks
@@ -40,10 +43,15 @@ module hdmi (
     .b(o_blu),
   );
 
-  OBUFDS OBUFDS_red(.I(o_red), .O(gpdi_dp[2]), .OB(gpdi_dn[2]));
-  OBUFDS OBUFDS_grn(.I(o_grn), .O(gpdi_dp[1]), .OB(gpdi_dn[1]));
-  OBUFDS OBUFDS_blu(.I(o_blu), .O(gpdi_dp[0]), .OB(gpdi_dn[0]));
-  OBUFDS OBUFDS_clock(.I(clk_px), .O(gpdi_dp[3]), .OB(gpdi_dn[3]));
+  ddr_diff ddr_diff_instance(
+    .clk_shift(clk_tmds),
+    .in_clock(o_clk),
+    .in_red(o_red),
+    .in_green(o_grn),
+    .in_blue(o_blu),
+    .out_p(gpdi_dp),
+    .out_n(gpdi_dn)
+  );
 
 endmodule
 

@@ -18,7 +18,7 @@ module clock
         .DPHASE_SOURCE("DISABLED"),
         .CLKOS_FPHASE(0),
         .CLKOP_FPHASE(0),
-        .CLKOS3_CPHASE(5),
+        .CLKOS3_CPHASE(0),
         .CLKOS2_CPHASE(0),
         .CLKOS_CPHASE(1),
         .CLKOP_CPHASE(3),
