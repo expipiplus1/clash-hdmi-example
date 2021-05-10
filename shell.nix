@@ -28,13 +28,13 @@ let
     sha256 = "0c5f201h5cfr8zibrjki9v791fipqd2b9rs6n5ck003wv50nsvsr";
   };
 
-  # clashShakeSrc = /home/j/src/clash-shake;
-  clashShakeSrc = pkgs.fetchFromGitHub {
-    owner = "expipiplus1";
-    repo = "clash-shake";
-    rev = "c12baa61050a44152d6e8aaa5b27f30d4753e5d2"; # sf-ecp5
-    sha256 = "14mp4qg2k8z1bqhhzggjww2fw72vzdkrgglqba90897mvssw43zh";
-  };
+  clashShakeSrc = /home/j/src/clash-shake;
+  # clashShakeSrc = pkgs.fetchFromGitHub {
+  #   owner = "expipiplus1";
+  #   repo = "clash-shake";
+  #   rev = "c12baa61050a44152d6e8aaa5b27f30d4753e5d2"; # sf-ecp5
+  #   sha256 = "14mp4qg2k8z1bqhhzggjww2fw72vzdkrgglqba90897mvssw43zh";
+  # };
 
   hask = haskellPackages.ghcWithHoogle
     (p: with p; [ clash-shake clash-ghc clash-prelude ]);
