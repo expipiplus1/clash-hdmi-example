@@ -27,11 +27,11 @@ data Pixel = Pixel
 hdmi
   :: ( HiddenClockResetEnable px
      , HiddenClockResetEnable tmds
-     , DomainPeriod px ~ (10 * DomainPeriod tmds)
+     , DomainPeriod px ~ (5 * DomainPeriod tmds)
      )
   => Signal px DisplayMode
   -> Signal px Pixel
-  -> Signal tmds (Vec 3 Bit)
+  -> Signal tmds (Vec 3 (Vec 2 Bit))
 hdmi dm px =
   let tmdsWords = toTMDS dm px
       bits      = bundle . map serializeTMDS . unbundle $ tmdsWords
@@ -52,13 +52,16 @@ toTMDS = liftA2 $ \DisplayMode {..} Pixel {..} ->
 
 serializeTMDS
   :: (HiddenClockResetEnable px, HiddenClockResetEnable tmds)
-  => DomainPeriod px ~ (10 * DomainPeriod tmds)
+  => DomainPeriod px ~ (5 * DomainPeriod tmds)
   => Signal px TMDSWord
-  -> Signal tmds Bit
+  -> Signal tmds (Vec 2 Bit)
 serializeTMDS tmds =
   let encoded     = tmdsEncode (register (Data 0) tmds)
-      encodedFast = unsafeSynchronizer (register 0 encoded)
-  in  shiftOut . fmap bv2v $ encodedFast
+      encodedFast = register 0 $ unsafeSynchronizer (register 0 encoded)
+  in  shiftOut . fmap pairs . fmap bv2v $ encodedFast
+
+pairs :: KnownNat n => Vec (n*2) a -> Vec n (Vec 2 a)
+pairs = unconcatI
 
 -- >>> simulateN @System 9 shiftOut (Prelude.replicate 3 =<< [0b101 :: BitVector 3, 0b111, 0b000])
 -- [1,0,1,1,1,1,0,0,0]
@@ -68,10 +71,12 @@ shiftOut
   => Signal dom (Vec (n+1) a)
   -> Signal dom a
 shiftOut i =
-  let c :: Signal dom (Index (n+1))
-      c  = register 0 (countSucc <$> c)
-      i' = i
-      s  = mux ((== 0) <$> c)
-               i'
-               ((error "shift" +>>) <$> register (pure (error "shift")) s)
-  in  last <$> s
+  let
+    c :: Signal dom (Index (n+1))
+    c    = register 0 (countSucc <$> c)
+    zero = register False ((== 0) <$> c)
+    i'   = i
+    s =
+      mux zero i' ((error "shift" +>>) <$> register (pure (error "shift")) s)
+  in
+    last <$> s

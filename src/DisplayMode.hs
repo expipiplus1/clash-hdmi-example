@@ -42,22 +42,44 @@ sync = (>= natToNum @syncStart) <&&> (< natToNum @syncEnd)
 active :: forall active n . (KnownNat active, KnownNat n) => Index n -> Bool
 active = (< natToNum @active)
 
+-- Sky04x
 -- pixelClockMHz = 25.175
-type HActive = 640
-type HFrontPorch = 16
-type HSync = 96
-type HBackPorch = 96
-type HSyncStart = HActive + HFrontPorch
-type HSyncEnd = HSyncStart + HSync
-type HSize = HActive + HFrontPorch + HSync + HBackPorch
+type HActive = 1280
+type HSyncStart = 1390
+type HSyncEnd = 1430
+type HSize = 1650
+type VActive = 720
+type VSyncStart = 725
+type VSyncEnd = 730
+type VSize = 750
 
-type VActive = 480
-type VFrontPorch = 11
-type VSync = 2
-type VBackPorch = 31
-type VSyncStart = VActive + VFrontPorch
-type VSyncEnd = VSyncStart + VSync
-type VSize = VActive + VFrontPorch + VSync + VBackPorch
+-- -- Sky04x
+-- -- pixelClockMHz = 25.175
+-- type HActive = 640
+-- type HSyncStart = 656
+-- type HSyncEnd = 752
+-- type HSize = 800
+-- type VActive = 480
+-- type VSyncStart = 490
+-- type VSyncEnd = 492
+-- type VSize = 525
+
+-- -- pixelClockMHz = 25.175
+-- type HActive = 640
+-- type HFrontPorch = 16
+-- type HSync = 96
+-- type HBackPorch = 96
+-- type HSyncStart = HActive + HFrontPorch
+-- type HSyncEnd = HSyncStart + HSync
+-- type HSize = HActive + HFrontPorch + HSync + HBackPorch
+
+-- type VActive = 480
+-- type VFrontPorch = 11
+-- type VSync = 2
+-- type VBackPorch = 31
+-- type VSyncStart = VActive + VFrontPorch
+-- type VSyncEnd = VSyncStart + VSync
+-- type VSize = VActive + VFrontPorch + VSync + VBackPorch
 
 ----------------------------------------------------------------
 -- Utils

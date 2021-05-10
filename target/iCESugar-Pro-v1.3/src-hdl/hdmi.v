@@ -11,8 +11,8 @@ module hdmi (
   wire clk_px, clk_tmds;
   clock clock_instance(
       .clkin_25MHz(clk_25mhz),
-      .clk_25MHz(clk_px),
-      .clk_250MHz(clk_tmds)
+      .clk_75MHz(clk_px),
+      .clk_375MHz(clk_tmds)
   );
 
   wire [7:0] red, grn, blu;

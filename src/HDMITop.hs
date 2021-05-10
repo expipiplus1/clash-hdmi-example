@@ -31,7 +31,7 @@ import           TestPattern
     , t_inputs = [PortName "clk_i"]
     , t_output = PortProduct "" [PortName "r", PortName "g", PortName "b"]
     }) #-}
-topEntity :: Clock PX -> Clock TMDS -> Signal TMDS (Vec 3 Bit)
+topEntity :: Clock PX -> Clock TMDS -> Signal TMDS (Vec 3 (Vec 2 Bit))
 topEntity pxClk tmdsClk =
   withClockResetEnable tmdsClk (resetGen @TMDS) enableGen (go @PX @TMDS pxClk)
 
@@ -42,7 +42,7 @@ instance KnownDomain TMDS where
   type KnownConf TMDS
     = 'DomainConfiguration
         TMDS
-        4000
+        8000
         'Rising
         'Asynchronous
         'Defined
@@ -67,10 +67,10 @@ go
   :: forall px tmds
    . ( HiddenClockResetEnable tmds
      , KnownDomain px
-     , DomainPeriod px ~ (10 * DomainPeriod tmds)
+     , DomainPeriod px ~ (5 * DomainPeriod tmds)
      )
   => Clock px
-  -> Signal tmds (Vec 3 Bit)
+  -> Signal tmds (Vec 3 (Vec 2 Bit))
 go pxClk =
   let (dm, tmds) =
         withSpecificClockResetEnable pxClk resetGen enableGen
