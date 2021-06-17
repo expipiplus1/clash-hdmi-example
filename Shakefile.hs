@@ -25,13 +25,44 @@ import           Development.Shake
 import           Development.Shake.Config
 import           Development.Shake.FilePath
 
+targets
+  :: [(FilePath, ClashKit -> FilePath -> FilePath -> String -> Rules SynthKit)]
 targets = [("iCESugar-Pro-v1.3", symbiflowECP5 iCESugar_Pro_v1_3)]
 
 outDir = ".build"
 
 srcDirs = ["src"]
 
-ghcArgs = ["-Wno-partial-type-signatures"]
+ghcArgs =
+  [ "-Wall"
+  , "-Wno-partial-type-signatures"
+  , "-XBinaryLiterals"
+  , "-XConstraintKinds"
+  , "-XDataKinds"
+  , "-XDeriveAnyClass"
+  , "-XDeriveGeneric"
+  , "-XDeriveLift"
+  , "-XDerivingStrategies"
+  , "-XExplicitForAll"
+  , "-XExplicitNamespaces"
+  , "-XFlexibleContexts"
+  , "-XFlexibleInstances"
+  , "-XKindSignatures"
+  , "-XMagicHash"
+  , "-XMonoLocalBinds"
+  , "-XNumericUnderscores"
+  , "-XNoImplicitPrelude"
+  , "-XNoStarIsType"
+  , "-XNoStrictData"
+  , "-XNoStrict"
+  , "-XQuasiQuotes"
+  , "-XScopedTypeVariables"
+  , "-XTemplateHaskellQuotes"
+  , "-XTemplateHaskell"
+  , "-XTypeApplications"
+  , "-XTypeFamilies"
+  , "-XTypeOperators"
+  ]
 
 clashArgs = ["-fclash-clear"]
 
@@ -79,7 +110,8 @@ main = shakeArgs shakeOptions { shakeFiles = outDir } $ do
       =<< getEnv "HIE_BIOS_ARG"
     output <- maybe (fail "missing args env variable") pure
       =<< getEnv "HIE_BIOS_OUTPUT"
-    liftIO $ writeFile output (unlines ghcArgs)
+    liftIO
+      $ writeFile output (unlines (ghcArgs <> [ "-i" <> s | s <- srcDirs ]))
 
   phony "prove" $ do
     let sby = outDir </> top <.> "sby"

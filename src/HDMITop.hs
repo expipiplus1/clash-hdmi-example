@@ -1,18 +1,5 @@
-{-# LANGUAGE BinaryLiterals #-}
-{-# LANGUAGE AllowAmbiguousTypes #-}
-{-# LANGUAGE DataKinds #-}
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE NoStarIsType #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RecordWildCards #-}
-{-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE TemplateHaskellQuotes #-}
-{-# LANGUAGE TypeApplications #-}
-{-# LANGUAGE TypeFamilies #-}
-{-# LANGUAGE TypeOperators #-}
+{-# OPTIONS_GHC -fno-warn-orphans #-}
 
-{-# LANGUAGE TypeSynonymInstances #-}
-{-# LANGUAGE FlexibleInstances #-}
 module HDMITop where
 
 import           Clash.Prelude
@@ -72,7 +59,7 @@ go
   => Clock px
   -> Signal tmds (Vec 3 (Vec 2 Bit))
 go pxClk =
-  let (dm, tmds) =
+  let (_, tmds) =
         withSpecificClockResetEnable pxClk resetGen enableGen
           $ let dm = vgaTiming @px
                 px = testPattern @px dm

@@ -1,11 +1,6 @@
-{-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE LambdaCase #-}
-{-# LANGUAGE BinaryLiterals #-}
-{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE ViewPatterns #-}
 {-# LANGUAGE TupleSections #-}
-{-# LANGUAGE DeriveAnyClass #-}
-{-# LANGUAGE DeriveGeneric #-}
 {-# OPTIONS_GHC -fplugin=GHC.TypeLits.Extra.Solver #-}
 {-# OPTIONS_GHC -fplugin=GHC.TypeLits.Normalise #-}
 {-# OPTIONS_GHC -fplugin=GHC.TypeLits.KnownNat.Solver #-}
@@ -15,9 +10,7 @@ module TMDS where
 import           Clash.Prelude           hiding ( scanr1 )
 import           Clash.Sized.Internal.BitVector ( popCountBV )
 import           Data.Bool                      ( bool )
-import           Data.Functor                   ( (<&>) )
 import           Data.Maybe                     ( )
-import qualified Prelude
 
 data TMDSWord
   = Data (BitVector 8)

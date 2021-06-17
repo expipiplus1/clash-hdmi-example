@@ -1,11 +1,4 @@
-{-# LANGUAGE DataKinds #-}
-{-# LANGUAGE TypeApplications #-}
-{-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE NoStarIsType #-}
-{-# LANGUAGE TypeFamilies #-}
-{-# LANGUAGE BinaryLiterals #-}
 {-# LANGUAGE RecordWildCards #-}
-{-# LANGUAGE TypeOperators #-}
 {-# OPTIONS_GHC -fplugin=GHC.TypeLits.Extra.Solver #-}
 {-# OPTIONS_GHC -fplugin=GHC.TypeLits.Normalise #-}
 {-# OPTIONS_GHC -fplugin=GHC.TypeLits.KnownNat.Solver #-}
@@ -15,7 +8,6 @@ module HDMI where
 import           Clash.Class.Counter
 import           Clash.Prelude
 import           DisplayMode
-import qualified Prelude
 import           TMDS
 
 data Pixel = Pixel
@@ -58,9 +50,9 @@ serializeTMDS
 serializeTMDS tmds =
   let encoded     = tmdsEncode (register (Data 0) tmds)
       encodedFast = register 0 $ unsafeSynchronizer (register 0 encoded)
-  in  shiftOut . fmap pairs . fmap bv2v $ encodedFast
+  in  shiftOut . fmap (pairs . bv2v) $ encodedFast
 
-pairs :: KnownNat n => Vec (n*2) a -> Vec n (Vec 2 a)
+pairs :: KnownNat n => Vec (n * 2) a -> Vec n (Vec 2 a)
 pairs = unconcatI
 
 -- >>> simulateN @System 9 shiftOut (Prelude.replicate 3 =<< [0b101 :: BitVector 3, 0b111, 0b000])
