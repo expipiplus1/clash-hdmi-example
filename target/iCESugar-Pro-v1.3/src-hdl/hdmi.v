@@ -2,7 +2,7 @@
 
 module hdmi (
 	input clk_25mhz,
-        output [3:0] gpdi_dp, gpdi_dn,
+  output [3:0] gpdi_dp, gpdi_dn,
 	output wifi_gpio0);
 
   // Tie gpio0 high, this keeps the board from rebooting

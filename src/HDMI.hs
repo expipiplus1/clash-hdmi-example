@@ -76,7 +76,6 @@ shiftOut i =
     c    = register 0 (countSucc <$> c)
     zero = register False ((== 0) <$> c)
     i'   = i
-    s =
-      mux zero i' ((error "shift" +>>) <$> register (pure (error "shift")) s)
+    s = mux zero i' ((error "shift" +>>) <$> register (pure (error "shift")) s)
   in
     last <$> s
