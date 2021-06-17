@@ -1,3 +1,5 @@
+#!/usr/bin/env runhaskell
+
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards, ViewPatterns, DataKinds #-}
