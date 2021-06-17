@@ -16,7 +16,7 @@
 module HDMITop where
 
 import           Clash.Prelude
-import           Clash.Verification             ( RenderAs(YosysSVA)
+import           Clash.Verification             ( RenderAs(YosysFormal)
                                                 , assert
                                                 , checkI
                                                 , cover

@@ -1,7 +1,7 @@
 { nixpkgsSrc ? builtins.fetchTarball {
   url =
-    "https://github.com/nixos/nixpkgs/archive/17af7a98d2e7dfdfdae5292b8dbd7bab28eeaf8d.tar.gz"; # refs/heads/master
-  sha256 = "11yk5q0jk7l30siv28b8qhb4s55ypmif6mp2nv90mwq1c6n11p1x";
+    "https://github.com/nixos/nixpkgs/archive/fa0326ce5233f7d592271df52c9d0812bec47b84.tar.gz"; # refs/heads/nixos-unstable
+  sha256 = "1rzgjhzp5gnd49fl123cbd70zl4gmf7175150aj51h796mr7aah3";
 }, pkgs ? import nixpkgsSrc { }, compiler ? null }:
 
 with pkgs;
@@ -20,21 +20,19 @@ let
       clash-prelude = self.callCabal2nix "" (clashSrc + "/clash-prelude") { };
     });
 
-  # clashSrc = /home/j/src/clash-compiler;
   clashSrc = pkgs.fetchFromGitHub {
     owner = "expipiplus1";
     repo = "clash-compiler";
-    rev = "a41d61c9109357e034691896798ebfc1b83b24af"; # joe-yosys-sva
-    sha256 = "0c5f201h5cfr8zibrjki9v791fipqd2b9rs6n5ck003wv50nsvsr";
+    rev = "b493ff8f07c902dcb0c904d76978f28460638c89"; # joe-yosys-sva
+    sha256 = "1ln0y7ys7x9qgl1qqhs7k7cxclr9l9sk3sxg32pv9npmdwg5vmcq";
   };
 
-  clashShakeSrc = /home/j/src/clash-shake;
-  # clashShakeSrc = pkgs.fetchFromGitHub {
-  #   owner = "expipiplus1";
-  #   repo = "clash-shake";
-  #   rev = "c12baa61050a44152d6e8aaa5b27f30d4753e5d2"; # sf-ecp5
-  #   sha256 = "14mp4qg2k8z1bqhhzggjww2fw72vzdkrgglqba90897mvssw43zh";
-  # };
+  clashShakeSrc = pkgs.fetchFromGitHub {
+    owner = "expipiplus1";
+    repo = "clash-shake";
+    rev = "dcee5b0e5e1c8a8af177bb0b5465de8835c05a8e"; # sf-ecp5
+    sha256 = "07z01dd0pmz1x9n1z4kzjix18zids5gs5f5jzhkzsx53qg783lzd";
+  };
 
   hask = haskellPackages.ghcWithHoogle
     (p: with p; [ clash-shake clash-ghc clash-prelude ]);
