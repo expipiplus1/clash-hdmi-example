@@ -74,44 +74,12 @@ main = shakeArgs shakeOptions { shakeFiles = outDir } $ do
               ]
     writeFileChanged out . TL.unpack $ renderMustache template values
 
-  "hie.yaml" %> \out -> do
-    let
-      json = encode $ object
-        [ "cradle" .= object
-            [ "multi"
-                .= (  [ object
-                          [ "path" .= ("Shakefile.hs" :: String)
-                          , "config" .= object
-                            [ "cradle"
-                                .= object
-                                     [ "direct" .= object
-                                         ["arguments" .= ([] :: [String])]
-                                     ]
-                            ]
-                          ]
-                      ]
-                   <> [ object
-                          [ "path" .= ("./" <> p)
-                          , "config" .= object
-                            [ "cradle" .= object
-                                [ "direct"
-                                    .= object
-                                         [ "arguments"
-                                             .= (  [ "-i" <> src
-                                                   | src <- srcDirs
-                                                   ]
-                                                <> ghcArgs
-                                                )
-                                         ]
-                                ]
-                            ]
-                          ]
-                      | p <- srcDirs
-                      ]
-                   )
-            ]
-        ]
-    writeFileChanged out . BSL.unpack $ json
+  phony "flags" $ do
+    file <- maybe (fail "missing file env variable") pure
+      =<< getEnv "HIE_BIOS_ARG"
+    output <- maybe (fail "missing args env variable") pure
+      =<< getEnv "HIE_BIOS_OUTPUT"
+    liftIO $ writeFile output (unlines ghcArgs)
 
   phony "prove" $ do
     let sby = outDir </> top <.> "sby"
